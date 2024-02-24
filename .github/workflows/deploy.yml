@@ -23,6 +23,10 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Create .env file
+        run: |
+          echo PRODUCTION=${{ vars.PRODUCTION }} > .env
+
       - name: Build, tag, and push Docker image to Amazon ECR
         run: |
           docker compose build
