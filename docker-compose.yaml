@@ -62,12 +62,20 @@ services:
     restart: always
 
   watchtower:
-    image: containrrr/watchtower
+    build:
+      context: .
+      dockerfile: ./watchtower/Dockerfile
+    image: 970268366635.dkr.ecr.ap-south-1.amazonaws.com/wen-lucky-cron-watchtower
     container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 30
+    env_file:
+      - .env
     environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ECR_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_ECR_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_ECR_REGION}
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_LABEL_ENABLE=true
+    command: --interval 30
     restart: always
