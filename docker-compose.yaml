@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:latest
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: ./celery/worker/Dockerfile
+    image: 970268366635.dkr.ecr.ap-south-1.amazonaws.com/wen-lucky-cron-celery_worker
+    container_name: celery_worker
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    labels:
+      - "com.centurylinklabs.watchtower.enable=${PRODUCTION}"
+
+  celery_flower:
+    build:
+      context: .
+      dockerfile: ./celery/flower/Dockerfile
+    image: 970268366635.dkr.ecr.ap-south-1.amazonaws.com/wen-lucky-cron-celery_flower
+    container_name: celery_flower
+    ports:
+      - 5555:5555
+    depends_on:
+      - celery_worker
+    env_file:
+      - .env
+    labels:
+      - "com.centurylinklabs.watchtower.enable=${PRODUCTION}"
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: ./celery/beat/Dockerfile
+    image: 970268366635.dkr.ecr.ap-south-1.amazonaws.com/wen-lucky-cron-celery_beat
+    container_name: celery_beat
+    depends_on:
+      - celery_worker
+    env_file:
+      - .env
+    labels:
+      - "com.centurylinklabs.watchtower.enable=${PRODUCTION}"
+
+  participation_service:
+    build:
+      context: .
+      dockerfile: ./participation_svc/Dockerfile
+    image: 970268366635.dkr.ecr.ap-south-1.amazonaws.com/wen-lucky-cron-participation_service
+    container_name: participation_service
+    env_file:
+      - .env
+    labels:
+      - "com.centurylinklabs.watchtower.enable=${PRODUCTION}"
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_LABEL_ENABLE=true

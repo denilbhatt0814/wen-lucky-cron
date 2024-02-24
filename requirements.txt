@@ -1,0 +1,8 @@
+celery
+redis
+flower
+pymongo
+celery-redbeat
+python-dotenv
+web3
+boto3
