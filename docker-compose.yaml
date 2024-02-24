@@ -9,7 +9,7 @@ services:
     build:
       context: .
       dockerfile: ./celery/worker/Dockerfile
-    image: 970268366635.dkr.ecr.ap-south-1.amazonaws.com/wen-lucky-cron-celery_worker
+    image: public.ecr.aws/i4v2w1v3/wen-lucky-cron-celery_worker
     container_name: celery_worker
     depends_on:
       - redis
@@ -23,7 +23,7 @@ services:
     build:
       context: .
       dockerfile: ./celery/flower/Dockerfile
-    image: 970268366635.dkr.ecr.ap-south-1.amazonaws.com/wen-lucky-cron-celery_flower
+    image: public.ecr.aws/i4v2w1v3/wen-lucky-cron-celery_flower
     container_name: celery_flower
     ports:
       - 5555:5555
@@ -39,7 +39,7 @@ services:
     build:
       context: .
       dockerfile: ./celery/beat/Dockerfile
-    image: 970268366635.dkr.ecr.ap-south-1.amazonaws.com/wen-lucky-cron-celery_beat
+    image: public.ecr.aws/i4v2w1v3/wen-lucky-cron-celery_beat
     container_name: celery_beat
     depends_on:
       - celery_worker
@@ -53,7 +53,7 @@ services:
     build:
       context: .
       dockerfile: ./participation_svc/Dockerfile
-    image: 970268366635.dkr.ecr.ap-south-1.amazonaws.com/wen-lucky-cron-participation_service
+    image: public.ecr.aws/i4v2w1v3/wen-lucky-cron-participation_service
     container_name: participation_service
     env_file:
       - .env
@@ -62,17 +62,11 @@ services:
     restart: always
 
   watchtower:
-    build:
-      context: .
-      dockerfile: ./watchtower/Dockerfile
-    image: 970268366635.dkr.ecr.ap-south-1.amazonaws.com/wen-lucky-cron-watchtower
     container_name: watchtower
+    image: containrrr/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - AWS_ACCESS_KEY_ID=${AWS_ECR_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_ECR_SECRET_ACCESS_KEY}
-      - AWS_REGION=${AWS_ECR_REGION}
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_LABEL_ENABLE=true
     command: --interval 30

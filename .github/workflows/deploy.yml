@@ -26,9 +26,6 @@ jobs:
       - name: Create .env file
         run: |
           echo PRODUCTION=${{ vars.PRODUCTION }} >> .env
-          echo AWS_ECR_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env
-          echo AWS_ECR_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env
-          echo AWS_ECR_REGION=${{ secrets.AWS_REGION }} >> .env
 
       - name: Build, tag, and push Docker image to Amazon ECR
         run: |
