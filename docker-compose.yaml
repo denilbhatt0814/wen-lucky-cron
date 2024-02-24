@@ -3,6 +3,7 @@ version: "3.8"
 services:
   redis:
     image: redis:latest
+    restart: always
 
   celery_worker:
     build:
@@ -16,6 +17,7 @@ services:
       - .env
     labels:
       - "com.centurylinklabs.watchtower.enable=${PRODUCTION}"
+    restart: always
 
   celery_flower:
     build:
@@ -31,6 +33,7 @@ services:
       - .env
     labels:
       - "com.centurylinklabs.watchtower.enable=${PRODUCTION}"
+    restart: always
 
   celery_beat:
     build:
@@ -44,6 +47,7 @@ services:
       - .env
     labels:
       - "com.centurylinklabs.watchtower.enable=${PRODUCTION}"
+    restart: always
 
   participation_service:
     build:
@@ -55,6 +59,7 @@ services:
       - .env
     labels:
       - "com.centurylinklabs.watchtower.enable=${PRODUCTION}"
+    restart: always
 
   watchtower:
     image: containrrr/watchtower
@@ -65,3 +70,4 @@ services:
     environment:
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_LABEL_ENABLE=true
+    restart: always
