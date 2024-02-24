@@ -17,7 +17,7 @@ def schedule_tasks(records):
         print(f"TASK: {task_name}")
         
         schedule_entry = redbeat_helper.get_schedule_entry(task_name, app)
-        print(schedule_entry)
+        print(type(schedule_entry))
         if schedule_entry: 
             # check if needs update
             print("checking for updates")

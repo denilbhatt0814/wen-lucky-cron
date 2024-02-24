@@ -22,6 +22,7 @@ from celery_app import app
 from datetime import timedelta
 from sync_service_new import sync_db_and_tasks
 from utils import redbeat_helper
+from celery.schedules import crontab
 import time
 import json
 
@@ -30,7 +31,9 @@ import json
 def setup_periodic_tasks(sender, **kwargs):
     preform_sync.delay()
     sender.add_periodic_task(timedelta(seconds=120), preform_sync.s(), name="sync_service")
-    sender.add_periodic_task(timedelta(seconds=180), daily_draw_disbursal.s(), name="daily_draw_disbursal_service")
+    
+    # run on 00:00 GMT
+    sender.add_periodic_task(crontab(hour=0, minute=0), daily_draw_disbursal.s(), name="daily_draw_disbursal_service")
 
 @app.task
 def preform_sync():
