@@ -6,6 +6,7 @@ if not os.environ["PRODUCTION"]:
     load_dotenv()
 
 import datetime
+import time
 import logging
 import json
 from web3 import Web3
@@ -71,6 +72,8 @@ def main():
         for event_filter in event_filters:
             for event in event_filter.get_new_entries():
                 handle_event(event, logger, participants_repo)
+
+        time.sleep(5)
 
 if __name__ == "__main__":
     main()

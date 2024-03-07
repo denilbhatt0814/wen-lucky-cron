@@ -78,6 +78,9 @@ def test_contract(contract_address, abi, frequency_in_sec, task_name):
         print(tx_receipt) # Optional
         status = contract.functions.getRoundStatus().call()
         print("AFTER CALL:", status)
+        if status != 0:
+            raise Exception("Round restart failed!")
+
         t = contract.functions.roundEndTime().call()
         currt = contract.functions.getCurrentBlockTimeStamp().call()
         # currt = time.time()
@@ -161,6 +164,7 @@ def daily_draw_disbursal():
     except Exception as e:
         if "No funds available to disburse" in str(e):
             print("WARNING: No funds to disburse!")    
+            return "WARNING: No funds to disburse!"
         else:
             print("ERROR: ", e)
             raise Exception(e)
